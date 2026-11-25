@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GOALMOMENT</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0b100e;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  background: #14251a;
+  padding: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 27px;
+  font-weight: 900;
+  color: #43ed78;
+}
+
+.logo span {
+  color: white;
+}
+
+header small {
+  color: #43ed78;
+}
+
+nav {
+  display: flex;
+  justify-content: space-around;
+  background: #1c2921;
+  padding: 17px 5px;
+  overflow-x: auto;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+nav a:hover {
+  color: #43ed78;
+}
+
+.hero {
+  text-align: center;
+  padding: 45px 15px;
+  background: linear-gradient(140deg, #164c29, #0b100e);
+}
+
+.hero h1 {
+  font-size: 34px;
+  margin-bottom: 12px;
+}
+
+.hero span {
+  color: #43ed78;
+}
+
+.hero p {
+  color: #c3d0c7;
+}
+
+.container {
+  padding: 20px 15px;
+}
+
+.section-title {
+  font-size: 21px;
+  margin-bottom: 17px;
+}
+
+.match {
+  background: #1b2920;
+  border: 1px solid #293b30;
+  border-radius: 14px;
+  padding: 20px 10px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+}
+
+.team {
+  width: 35%;
+}
+
+.team .icon {
+  font-size: 32px;
+  margin-bottom: 9px;
+}
+
+.team strong {
+  font-size: 13px;
+}
+
+.score {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.live {
+  color: #43ed78;
+  font-size: 11px;
+  margin-top: 7px;
+}
+
+.tag {
+  color: #9baa9f;
+  font-size: 12px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.league {
+  background: #1b2920;
+  border-radius: 12px;
+  padding: 19px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.league a {
+  color: #43ed78;
+  text-decoration: none;
+}
+
+footer {
+  text-align: center;
+  padding: 30px;
+  color: #84958a;
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">GOAL<span>MOMENT</span></div>
+  <small>⚽ FOOTBALL</small>
+</header>
+
+<nav>
+  <a href="#home">Accueil</a>
+  <a href="#live">Direct</a>
+  <a href="#matches">Matchs</a>
+  <a href="#leagues">Ligues</a>
+  <a href="#news">Actus</a>
+</nav>
+
+<section class="hero" id="home">
+  <h1>LIVE <span>FOOTBALL</span></h1>
+  <p>Vis le football à chaque instant.</p>
+</section>
+
+<div class="container" id="live">
+
+  <h2 class="section-title">🔴 Matchs en direct</h2>
+
+  <div class="tag">MATCH DE DÉMONSTRATION</div>
+
+  <div class="match">
+    <div class="team">
+      <div class="icon">🔴</div>
+      <strong>Équipe A</strong>
+    </div>
+
+    <div class="score">
+      2 - 1
+      <div class="live">● LIVE</div>
+    </div>
+
+    <div class="team">
+      <div class="icon">🔵</div>
+      <strong>Équipe B</strong>
+    </div>
+  </div>
+
+</div>
+
+<div class="container" id="matches">
+
+  <h2 class="section-title">📅 Prochains matchs</h2>
+
+  <div class="match">
+    <div class="team">
+      <div class="icon">⚪</div>
+      <strong>Équipe C</strong>
+    </div>
+
+    <div class="score">VS</div>
+
+    <div class="team">
+      <div class="icon">🟡</div>
+      <strong>Équipe D</strong>
+    </div>
+  </div>
+
+</div>
+
+<div class="container" id="leagues">
+
+  <h2 class="section-title">🏆 Championnats</h2>
+
+  <div class="league">
+    <strong>🇫🇷 Ligue 1</strong>
+    <a href="#news">Voir →</a>
+  </div>
+
+  <div class="league">
+    <strong>🇬🇧 Premier League</strong>
+    <a href="#news">Voir →</a>
+  </div>
+
+  <div class="league">
+    <strong>🇪🇸 Liga</strong>
+    <a href="#news">Voir →</a>
+  </div>
+
+  <div class="league">
+    <strong>🇩🇪 Bundesliga</strong>
+    <a href="#news">Voir →</a>
+  </div>
+
+</div>
+
+<div class="container" id="news">
+  <h2 class="section-title">📰 Actualités</h2>
+
+  <div class="league">
+    <strong>Les actualités du football arrivent bientôt !</strong>
+  </div>
+</div>
+
+<footer>
+  © 2026 GOALMOMENT<br>
+  Le football à chaque instant.
+</footer>
+
+</body>
+</html>
