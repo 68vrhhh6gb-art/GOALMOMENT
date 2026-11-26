@@ -4,195 +4,308 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GOALMOMENT</title>
+<title>GOALMOMENT - Football Live</title>
 <style>
+:root {
+  --bg:#080d18;
+  --panel:#111a2b;
+  --panel2:#19243a;
+  --green:#28e58a;
+  --muted:#8b9bb4;
+  --white:#f4f7ff;
+}
 *{box-sizing:border-box}
-body{margin:0;background:#090e1b;color:white;font-family:Arial,sans-serif}
-header{padding:25px 18px;background:#111a2e;border-bottom:1px solid #26334c}
-.logo{font-size:27px;font-weight:900;color:#42e88b}
-header p{color:#aab5c8;margin-bottom:0}
-nav{display:flex;gap:9px;padding:15px;overflow:auto}
-button{border:0;border-radius:9px;padding:12px 16px;background:#202c43;color:white;font-weight:bold}
-button.active{background:#42e88b;color:#07130c}
-main{padding:10px 15px}
-h2{font-size:20px}
-#matches{display:grid;gap:12px}
-.match{background:#151f32;border:1px solid #283751;border-radius:13px;padding:16px}
-.league{font-size:12px;color:#42e88b;margin-bottom:13px}
-.teams{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.team{width:38%;font-weight:bold}
-.team:last-child{text-align:right}
-.score{font-size:22px;font-weight:900;white-space:nowrap}
-.status{color:#aab5c8;font-size:12px;margin-top:12px}
-.live{color:#ff6262;font-weight:bold}
-#message{color:#aab5c8;padding:20px 4px}
-footer{text-align:center;color:#718099;padding:30px;font-size:12px}
+body{
+ margin:0;background:var(--bg);color:var(--white);
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:23px 18px;
+ background:linear-gradient(120deg,#102d2b,#10182b);
+ border-bottom:1px solid #26364c;
+ display:flex;justify-content:space-between;align-items:center;
+}
+.logo{font-size:25px;font-weight:900;letter-spacing:1px}
+.logo span{color:var(--green)}
+.live-indicator{color:var(--green);font-size:12px}
+main{max-width:950px;margin:auto;padding:20px 14px}
+.hero{
+ padding:25px 20px;border-radius:17px;
+ background:linear-gradient(120deg,#123e34,#172b45);
+ margin-bottom:22px;
+}
+.hero h1{margin:0 0 8px;font-size:27px}
+.hero p{color:#c5d7d3;margin:0;font-size:14px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0}
+button{
+ border:0;border-radius:10px;padding:12px 17px;
+ background:var(--panel2);color:white;font-weight:bold;
+ cursor:pointer;
+}
+button.active,button:hover{background:var(--green);color:#06150e}
+#refresh{background:var(--green);color:#06150e}
+.section-title{font-size:18px;margin:23px 0 13px}
+#message{color:var(--muted);font-size:13px;margin:12px 0}
+.match{
+ background:var(--panel);border:1px solid #25334b;
+ padding:16px;border-radius:14px;margin-bottom:11px;
+}
+.league{
+ color:var(--muted);font-size:12px;
+ display:flex;justify-content:space-between;margin-bottom:15px;
+}
+.teams{
+ display:grid;grid-template-columns:1fr 90px 1fr;
+ align-items:center;text-align:center;gap:7px;
+}
+.team img{width:38px;height:38px;object-fit:contain}
+.team-name{font-size:13px;font-weight:bold;margin-top:7px}
+.score{font-size:23px;font-weight:900}
+.status{font-size:11px;color:var(--green);margin-top:5px}
+.time{font-size:12px;color:var(--muted)}
+.country-tag{color:var(--green);font-size:10px}
+.empty{text-align:center;padding:30px;color:var(--muted)}
+footer{text-align:center;padding:30px;color:var(--muted);font-size:12px}
+@media(max-width:450px){
+ .team-name{font-size:11px}
+ .teams{grid-template-columns:1fr 65px 1fr}
+ .score{font-size:20px}
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">⚽ GOALMOMENT</div>
-  <p>Les scores du football mondial</p>
+ <div class="logo">GOAL<span>MOMENT</span></div>
+ <div class="live-indicator">● FOOTBALL LIVE</div>
 </header>
 
-<nav>
-  <button class="active" onclick="changeTab('all',this)">🌍 Monde</button>
-  <button onclick="changeTab('live',this)">🔴 En direct</button>
-  <button onclick="changeTab('local',this)">📍 Mon pays</button>
-</nav>
-
 <main>
-  <h2 id="heading">Tous les matchs</h2>
-  <div id="message">Chargement des scores...</div>
-  <div id="matches"></div>
+ <div class="hero">
+  <h1>Le football, en direct.</h1>
+  <p>Les scores, les résultats et les prochains matchs du monde entier.</p>
+ </div>
+
+ <div class="actions">
+  <button class="active" data-tab="all">Tous</button>
+  <button data-tab="live">🔴 En direct</button>
+  <button data-tab="upcoming">À venir</button>
+  <button data-tab="finished">Résultats</button>
+  <button id="refresh">↻ Actualiser</button>
+ </div>
+
+ <div id="message">Chargement des matchs...</div>
+ <div id="matches"></div>
 </main>
 
-<footer>GOALMOMENT • Football partout dans le monde</footer>
+<footer>
+ GOALMOMENT © 2026 · Tous les matchs au même endroit
+</footer>
 
 <script>
-const leagues = [
-  "eng.1","esp.1","fra.1","ger.1","ita.1",
-  "usa.1","mex.1","bra.1","arg.1","jpn.1",
-  "aus.1","kor.1","uefa.champions","uefa.europa",
-  "fifa.world","ned.1","por.1","sco.1","tur.1"
-];
+// ===================================
+// CONFIGURATION API-FOOTBALL
+// ===================================
 
-const country = (navigator.language || "fr-FR").split("-").pop().toUpperCase();
+// Colle ici ta NOUVELLE clé API
+const API_KEY = 476348f9c3a95e987a1d1cc5d9956028;
 
-const localLeagues = {
-  FR:["fra.1"],
-  US:["usa.1","mex.1"],
-  JP:["jpn.1","kor.1"],
-  KR:["kor.1","jpn.1"],
-  BR:["bra.1"],
-  AR:["arg.1"],
-  GB:["eng.1","sco.1"],
-  ES:["esp.1"],
-  DE:["ger.1"],
-  IT:["ita.1"],
-  NL:["ned.1"],
-  PT:["por.1"],
-  AU:["aus.1"],
-  MX:["mex.1"]
-};
+const API_URL = "https://v3.football.api-sports.io";
+const TIMEZONE = "Europe/Paris";
 
-let matches = [];
+let allMatches = [];
 let currentTab = "all";
 
-async function loadScores(){
-  const box = document.getElementById("matches");
-  const message = document.getElementById("message");
-  message.textContent = "Chargement des matchs...";
+// Pays associé aux langues du navigateur
+const countryNames = {
+ FR:"France", US:"USA", GB:"England", DE:"Germany",
+ ES:"Spain", IT:"Italy", PT:"Portugal", BR:"Brazil",
+ AR:"Argentina", NL:"Netherlands", BE:"Belgium",
+ MA:"Morocco", DZ:"Algeria", TN:"Tunisia",
+ TR:"Turkey", JP:"Japan", KR:"South-Korea",
+ MX:"Mexico", CA:"Canada", SN:"Senegal",
+ CI:"Ivory-Coast", CH:"Switzerland", AT:"Austria"
+};
 
-  try {
-    const results = await Promise.all(
-      leagues.map(async league => {
-        const url =
-          "https://site.api.espn.com/apis/site/v2/sports/soccer/"
-          + league + "/scoreboard";
-        const response = await fetch(url);
-        if(!response.ok) return [];
-        const data = await response.json();
-
-        return (data.events || []).map(event => ({
-          ...event,
-          leagueName: data.leagues?.[0]?.name || league,
-          leagueCode: league
-        }));
-      })
-    );
-
-    const unique = new Map();
-    results.flat().forEach(match => unique.set(match.id,match));
-    matches = [...unique.values()];
-
-    matches.sort((a,b) => new Date(a.date)-new Date(b.date));
-    showMatches();
-  } catch(error) {
-    message.textContent =
-      "Impossible de charger les scores. Réessaie dans un instant.";
-  }
+function getVisitorCountry(){
+ const locale = navigator.language || "fr-FR";
+ const code = locale.split("-")[1]?.toUpperCase();
+ return countryNames[code] || null;
 }
 
-function showMatches(){
-  const box = document.getElementById("matches");
-  const message = document.getElementById("message");
-  const heading = document.getElementById("heading");
+const visitorCountry = getVisitorCountry();
 
-  let list = [...matches];
+function localDate(date){
+ const y = date.getFullYear();
+ const m = String(date.getMonth()+1).padStart(2,"0");
+ const d = String(date.getDate()).padStart(2,"0");
+ return `${y}-${m}-${d}`;
+}
 
-  if(currentTab === "live"){
-    list = list.filter(m =>
-      m.status?.type?.state === "in"
-    );
-    heading.textContent = "🔴 Matchs en direct";
-  } else if(currentTab === "local"){
-    const preferred = localLeagues[country] || ["fra.1"];
-    list.sort((a,b) =>
-      preferred.indexOf(b.leagueCode) -
-      preferred.indexOf(a.leagueCode)
-    );
-    heading.textContent = "📍 Matchs de ton pays";
-  } else {
-    heading.textContent = "🌍 Football mondial";
-  }
+async function apiRequest(endpoint){
+ const response = await fetch(API_URL + endpoint,{
+  method:"GET",
+  headers:{"x-apisports-key":API_KEY}
+ });
+ if(!response.ok) throw new Error("Erreur API : "+response.status);
+ const data = await response.json();
+ if(data.errors && Object.keys(data.errors).length){
+  throw new Error(JSON.stringify(data.errors));
+ }
+ return data.response || [];
+}
 
-  box.innerHTML = "";
+async function loadMatches(){
+ const message = document.getElementById("message");
+ const container = document.getElementById("matches");
 
-  if(list.length === 0){
-    message.textContent = "Aucun match trouvé pour le moment.";
-    return;
-  }
+ if(API_KEY === "COLLE_TA_NOUVELLE_CLE_ICI"){
+  message.textContent="Ajoute ta clé API dans le code pour commencer.";
+  return;
+ }
 
-  message.textContent = list.length + " matchs trouvés";
+ message.textContent="Chargement des vrais matchs...";
+ document.getElementById("refresh").disabled=true;
 
-  list.forEach(match => {
-    const competition = match.competitions?.[0];
-    const teams = competition?.competitors || [];
-    const home = teams.find(t => t.homeAway === "home");
-    const away = teams.find(t => t.homeAway === "away");
+ try{
+  const today = localDate(new Date());
+  const future = new Date();
+  future.setDate(future.getDate()+7);
+  const endDate = localDate(future);
 
-    if(!home || !away) return;
+  // Deux requêtes pour limiter le quota gratuit
+  const [upcoming, finished] = await Promise.all([
+   apiRequest(`/fixtures?from=${today}&to=${endDate}&timezone=${TIMEZONE}`),
+   apiRequest(`/fixtures?last=10&timezone=${TIMEZONE}`)
+  ]);
 
-    const state = match.status?.type?.state;
-    const isLive = state === "in";
-    const score = state === "pre"
-      ? "VS"
-      : (home.score ?? "0") + " - " + (away.score ?? "0");
+  const combined = [...upcoming,...finished];
+  const unique = new Map();
 
-    const date = new Date(match.date);
-    const time = date.toLocaleString();
-
-    const card = document.createElement("div");
-    card.className = "match";
-    card.innerHTML = `
-      <div class="league">${match.leagueName}</div>
-      <div class="teams">
-        <div class="team">${home.team.displayName}</div>
-        <div class="score">${score}</div>
-        <div class="team">${away.team.displayName}</div>
-      </div>
-      <div class="status ${isLive ? "live" : ""}">
-        ${isLive ? "🔴 EN DIRECT" :
-          match.status?.type?.shortDetail || time}
-      </div>
-    `;
-    box.appendChild(card);
+  combined.forEach(match=>{
+   unique.set(match.fixture.id,match);
   });
+
+  allMatches = Array.from(unique.values());
+
+  message.textContent =
+   allMatches.length+" matchs chargés · Pays prioritaire : "+
+   (visitorCountry || "Non détecté");
+
+  renderMatches();
+
+ }catch(error){
+  console.error(error);
+  message.textContent="Impossible de charger les matchs : "+error.message;
+ }finally{
+  document.getElementById("refresh").disabled=false;
+ }
 }
 
-function changeTab(tab,button){
-  currentTab = tab;
-  document.querySelectorAll("nav button").forEach(b =>
-    b.classList.remove("active")
-  );
+function getCategory(match){
+ const status=match.fixture.status.short;
+ const live=["1H","2H","HT","ET","BT","P","LIVE"];
+ const finished=["FT","AET","PEN"];
+ if(live.includes(status))return "live";
+ if(finished.includes(status))return "finished";
+ return "upcoming";
+}
+
+function renderMatches(){
+ const container=document.getElementById("matches");
+ container.innerHTML="";
+
+ let filtered=allMatches.filter(match=>{
+  return currentTab==="all" || getCategory(match)===currentTab;
+ });
+
+ // Priorité au pays du visiteur
+ filtered.sort((a,b)=>{
+  const aPriority=visitorCountry &&
+   a.league.country===visitorCountry ? 1:0;
+  const bPriority=visitorCountry &&
+   b.league.country===visitorCountry ? 1:0;
+  if(aPriority!==bPriority)return bPriority-aPriority;
+  return new Date(a.fixture.date)-new Date(b.fixture.date);
+ });
+
+ if(!filtered.length){
+  container.innerHTML='<div class="empty">Aucun match dans cette catégorie pour le moment.</div>';
+  return;
+ }
+
+ filtered.forEach(match=>{
+  const home=match.teams.home;
+  const away=match.teams.away;
+  const status=match.fixture.status;
+  const category=getCategory(match);
+
+  const date=new Date(match.fixture.date);
+  const time=date.toLocaleString("fr-FR",{
+   timeZone:TIMEZONE,
+   day:"2-digit",month:"2-digit",
+   hour:"2-digit",minute:"2-digit"
+  });
+
+  const scores = category==="upcoming"
+   ? "VS"
+   : `${match.goals.home ?? 0} - ${match.goals.away ?? 0}`;
+
+  const statusText=category==="live"
+   ? `EN DIRECT · ${status.elapsed ?? ""}'`
+   : category==="finished"
+    ? "TERMINÉ"
+    : time;
+
+  const priority=visitorCountry &&
+   match.league.country===visitorCountry;
+
+  const card=document.createElement("div");
+  card.className="match";
+
+  card.innerHTML=`
+   <div class="league">
+    <span>${match.league.flag || "⚽"} ${match.league.country} · ${match.league.name}</span>
+    <span class="country-tag">${priority?"★ TON PAYS":""}</span>
+   </div>
+   <div class="teams">
+    <div class="team">
+     <img src="${home.logo}" alt="">
+     <div class="team-name"></div>
+    </div>
+    <div>
+     <div class="score">${scores}</div>
+     <div class="status">${statusText}</div>
+    </div>
+    <div class="team">
+     <img src="${away.logo}" alt="">
+     <div class="team-name"></div>
+    </div>
+   </div>`;
+
+  card.querySelectorAll(".team-name")[0].textContent=home.name;
+  card.querySelectorAll(".team-name")[1].textContent=away.name;
+
+  container.appendChild(card);
+ });
+}
+
+document.querySelectorAll("[data-tab]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll("[data-tab]").forEach(b=>b.classList.remove("active"));
   button.classList.add("active");
-  showMatches();
-}
+  currentTab=button.dataset.tab;
+  renderMatches();
+ });
+});
 
-loadScores();
-setInterval(loadScores,60000);
+document.getElementById("refresh").addEventListener("click",loadMatches);
+
+loadMatches();
+
+// Actualisation automatique toutes les 30 minutes
+// pour préserver le quota gratuit.
+setInterval(loadMatches,30*60*1000);
 </script>
 </body>
 </html>
