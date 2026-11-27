@@ -4,308 +4,450 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GOALMOMENT - Football Live</title>
+<title>GOALMOMENT - Football en direct</title>
+
 <style>
-:root {
-  --bg:#080d18;
-  --panel:#111a2b;
-  --panel2:#19243a;
-  --green:#28e58a;
-  --muted:#8b9bb4;
-  --white:#f4f7ff;
-}
 *{box-sizing:border-box}
 body{
- margin:0;background:var(--bg);color:var(--white);
- font-family:Arial,sans-serif;
+  margin:0;
+  background:#080d18;
+  color:#fff;
+  font-family:Arial,sans-serif;
 }
 header{
- padding:23px 18px;
- background:linear-gradient(120deg,#102d2b,#10182b);
- border-bottom:1px solid #26364c;
- display:flex;justify-content:space-between;align-items:center;
+  padding:22px;
+  background:#101a2b;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:15px;
+  border-bottom:1px solid #24334a;
 }
-.logo{font-size:25px;font-weight:900;letter-spacing:1px}
-.logo span{color:var(--green)}
-.live-indicator{color:var(--green);font-size:12px}
-main{max-width:950px;margin:auto;padding:20px 14px}
-.hero{
- padding:25px 20px;border-radius:17px;
- background:linear-gradient(120deg,#123e34,#172b45);
- margin-bottom:22px;
-}
-.hero h1{margin:0 0 8px;font-size:27px}
-.hero p{color:#c5d7d3;margin:0;font-size:14px}
-.actions{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0}
+.logo{font-size:26px;font-weight:900;color:#42e68b}
 button{
- border:0;border-radius:10px;padding:12px 17px;
- background:var(--panel2);color:white;font-weight:bold;
- cursor:pointer;
+  background:#35d982;
+  color:#07130c;
+  border:0;
+  padding:12px 17px;
+  border-radius:9px;
+  font-weight:bold;
+  cursor:pointer;
 }
-button.active,button:hover{background:var(--green);color:#06150e}
-#refresh{background:var(--green);color:#06150e}
-.section-title{font-size:18px;margin:23px 0 13px}
-#message{color:var(--muted);font-size:13px;margin:12px 0}
+button.secondary{background:#26364c;color:white}
+input,select{
+  width:100%;
+  padding:13px;
+  margin:7px 0 14px;
+  border:1px solid #34445c;
+  border-radius:8px;
+  background:#111c2d;
+  color:white;
+}
+main{max-width:1000px;margin:auto;padding:20px}
+h2{color:#42e68b}
+.panel{
+  background:#111c2d;
+  padding:20px;
+  border:1px solid #26364c;
+  border-radius:15px;
+  margin:18px 0;
+}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
 .match{
- background:var(--panel);border:1px solid #25334b;
- padding:16px;border-radius:14px;margin-bottom:11px;
-}
-.league{
- color:var(--muted);font-size:12px;
- display:flex;justify-content:space-between;margin-bottom:15px;
+  background:#1a2940;
+  padding:15px;
+  margin:10px 0;
+  border-radius:10px;
 }
 .teams{
- display:grid;grid-template-columns:1fr 90px 1fr;
- align-items:center;text-align:center;gap:7px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  font-weight:bold;
 }
-.team img{width:38px;height:38px;object-fit:contain}
-.team-name{font-size:13px;font-weight:bold;margin-top:7px}
-.score{font-size:23px;font-weight:900}
-.status{font-size:11px;color:var(--green);margin-top:5px}
-.time{font-size:12px;color:var(--muted)}
-.country-tag{color:var(--green);font-size:10px}
-.empty{text-align:center;padding:30px;color:var(--muted)}
-footer{text-align:center;padding:30px;color:var(--muted);font-size:12px}
-@media(max-width:450px){
- .team-name{font-size:11px}
- .teams{grid-template-columns:1fr 65px 1fr}
- .score{font-size:20px}
-}
+.score{color:#42e68b;font-size:21px}
+.muted{color:#9eafc6;font-size:13px}
+.hidden{display:none!important}
+.status{color:#42e68b;font-weight:bold}
+footer{text-align:center;color:#8798af;padding:30px}
 </style>
 </head>
+
 <body>
 
 <header>
- <div class="logo">GOAL<span>MOMENT</span></div>
- <div class="live-indicator">● FOOTBALL LIVE</div>
+  <div class="logo">⚽ GOALMOMENT</div>
+  <div>
+    <button id="accountButton">Mon compte</button>
+    <button id="logoutButton" class="secondary hidden">Déconnexion</button>
+  </div>
 </header>
 
 <main>
- <div class="hero">
-  <h1>Le football, en direct.</h1>
-  <p>Les scores, les résultats et les prochains matchs du monde entier.</p>
- </div>
 
- <div class="actions">
-  <button class="active" data-tab="all">Tous</button>
-  <button data-tab="live">🔴 En direct</button>
-  <button data-tab="upcoming">À venir</button>
-  <button data-tab="finished">Résultats</button>
-  <button id="refresh">↻ Actualiser</button>
- </div>
+<section class="panel">
+  <h2>⚽ Le football en direct</h2>
+  <p class="muted">Les matchs du monde entier, au même endroit.</p>
+  <div class="tabs">
+    <button onclick="showMatches('all')">Tous</button>
+    <button onclick="showMatches('live')">🔴 En direct</button>
+    <button onclick="showMatches('upcoming')">À venir</button>
+    <button onclick="showMatches('finished')">Résultats</button>
+  </div>
+  <p id="matchStatus" class="muted">Chargement des matchs...</p>
+  <div id="matches"></div>
+  <button class="secondary" onclick="loadMatches()">Actualiser</button>
+</section>
 
- <div id="message">Chargement des matchs...</div>
- <div id="matches"></div>
+<section id="accountPanel" class="panel hidden">
+  <h2>👤 Mon compte GOALMOMENT</h2>
+
+  <div id="loggedOut">
+    <p>Crée ton compte ou connecte-toi.</p>
+
+    <label>Adresse e-mail</label>
+    <input id="email" type="email" placeholder="Ton adresse e-mail">
+
+    <label>Mot de passe</label>
+    <input id="password" type="password" placeholder="Ton mot de passe">
+
+    <button onclick="signUp()">Créer un compte</button>
+    <button class="secondary" onclick="signIn()">Se connecter</button>
+    <p id="authMessage" class="muted"></p>
+  </div>
+
+  <div id="loggedIn" class="hidden">
+    <p class="status">✓ Tu es connecté !</p>
+    <p id="userEmail"></p>
+
+    <h3>🌍 Ton pays</h3>
+    <select id="country">
+      <option value="France">France</option>
+      <option value="England">Angleterre</option>
+      <option value="Spain">Espagne</option>
+      <option value="Germany">Allemagne</option>
+      <option value="Italy">Italie</option>
+      <option value="Portugal">Portugal</option>
+      <option value="USA">États-Unis</option>
+      <option value="Brazil">Brésil</option>
+      <option value="Morocco">Maroc</option>
+      <option value="Other">Autre</option>
+    </select>
+
+    <h3>⭐ Tes équipes favorites</h3>
+    <input id="favorites" placeholder="Exemple : PSG, Real Madrid, Arsenal">
+    <button onclick="savePreferences()">Enregistrer mes préférences</button>
+    <p id="saveMessage" class="muted"></p>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>🌍 Le monde du football</h2>
+  <p>Retrouve les rencontres et les résultats des compétitions du monde entier.</p>
+  <p class="muted">Les matchs seront affichés ici dès que la connexion sécurisée à l'API sera configurée.</p>
+</section>
+
 </main>
 
 <footer>
- GOALMOMENT © 2026 · Tous les matchs au même endroit
+  GOALMOMENT © 2026 · Tous les matchs, une seule passion.
 </footer>
 
-<script>
-// ===================================
-// CONFIGURATION API-FOOTBALL
-// ===================================
+<script type="module">
 
-// Colle ici ta NOUVELLE clé API
-const API_KEY = “476348f9c3a95e987a1d1cc5d9956028";
+// =====================================
+// 1. CONFIGURATION SUPABASE
+// =====================================
 
-const API_URL = "https://v3.football.api-sports.io";
-const TIMEZONE = "Europe/Paris";
+// COLLE TON PROJECT URL ENTRE LES GUILLEMETS
+const SUPABASE_URL = "COLLE_TON_PROJECT_URL_ICI";
 
+// COLLE TA PUBLISHABLE KEY ENTRE LES GUILLEMETS
+const SUPABASE_PUBLISHABLE_KEY = "COLLE_TA_PUBLISHABLE_KEY_ICI";
+
+// =====================================
+// 2. CONFIGURATION FOOTBALL
+// =====================================
+
+// Adresse de ton futur service sécurisé API-Football.
+// Ne mets PAS ta clé secrète API-Football ici.
+const FOOTBALL_API_PROXY = "";
+
+import { createClient } from
+"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const supabase = createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+let currentUser = null;
 let allMatches = [];
-let currentTab = "all";
+let currentFilter = "all";
 
-// Pays associé aux langues du navigateur
-const countryNames = {
- FR:"France", US:"USA", GB:"England", DE:"Germany",
- ES:"Spain", IT:"Italy", PT:"Portugal", BR:"Brazil",
- AR:"Argentina", NL:"Netherlands", BE:"Belgium",
- MA:"Morocco", DZ:"Algeria", TN:"Tunisia",
- TR:"Turkey", JP:"Japan", KR:"South-Korea",
- MX:"Mexico", CA:"Canada", SN:"Senegal",
- CI:"Ivory-Coast", CH:"Switzerland", AT:"Austria"
+// =====================================
+// 3. COMPTES UTILISATEURS
+// =====================================
+
+const accountPanel = document.getElementById("accountPanel");
+
+document.getElementById("accountButton").onclick = () => {
+  accountPanel.classList.toggle("hidden");
 };
 
-function getVisitorCountry(){
- const locale = navigator.language || "fr-FR";
- const code = locale.split("-")[1]?.toUpperCase();
- return countryNames[code] || null;
-}
+async function signUp(){
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
 
-const visitorCountry = getVisitorCountry();
+  if(!email || password.length < 8){
+    authMessage.textContent =
+      "Entre un e-mail et un mot de passe d'au moins 8 caractères.";
+    return;
+  }
 
-function localDate(date){
- const y = date.getFullYear();
- const m = String(date.getMonth()+1).padStart(2,"0");
- const d = String(date.getDate()).padStart(2,"0");
- return `${y}-${m}-${d}`;
-}
-
-async function apiRequest(endpoint){
- const response = await fetch(API_URL + endpoint,{
-  method:"GET",
-  headers:{"x-apisports-key":API_KEY}
- });
- if(!response.ok) throw new Error("Erreur API : "+response.status);
- const data = await response.json();
- if(data.errors && Object.keys(data.errors).length){
-  throw new Error(JSON.stringify(data.errors));
- }
- return data.response || [];
-}
-
-async function loadMatches(){
- const message = document.getElementById("message");
- const container = document.getElementById("matches");
-
- if(API_KEY === "COLLE_TA_NOUVELLE_CLE_ICI"){
-  message.textContent="Ajoute ta clé API dans le code pour commencer.";
-  return;
- }
-
- message.textContent="Chargement des vrais matchs...";
- document.getElementById("refresh").disabled=true;
-
- try{
-  const today = localDate(new Date());
-  const future = new Date();
-  future.setDate(future.getDate()+7);
-  const endDate = localDate(future);
-
-  // Deux requêtes pour limiter le quota gratuit
-  const [upcoming, finished] = await Promise.all([
-   apiRequest(`/fixtures?from=${today}&to=${endDate}&timezone=${TIMEZONE}`),
-   apiRequest(`/fixtures?last=10&timezone=${TIMEZONE}`)
-  ]);
-
-  const combined = [...upcoming,...finished];
-  const unique = new Map();
-
-  combined.forEach(match=>{
-   unique.set(match.fixture.id,match);
+  const {error} = await supabase.auth.signUp({
+    email,
+    password
   });
 
-  allMatches = Array.from(unique.values());
-
-  message.textContent =
-   allMatches.length+" matchs chargés · Pays prioritaire : "+
-   (visitorCountry || "Non détecté");
-
-  renderMatches();
-
- }catch(error){
-  console.error(error);
-  message.textContent="Impossible de charger les matchs : "+error.message;
- }finally{
-  document.getElementById("refresh").disabled=false;
- }
+  authMessage.textContent = error
+    ? error.message
+    : "Compte créé ! Vérifie tes e-mails si une confirmation est demandée.";
 }
 
-function getCategory(match){
- const status=match.fixture.status.short;
- const live=["1H","2H","HT","ET","BT","P","LIVE"];
- const finished=["FT","AET","PEN"];
- if(live.includes(status))return "live";
- if(finished.includes(status))return "finished";
- return "upcoming";
+async function signIn(){
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  const {error} = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  authMessage.textContent = error
+    ? error.message
+    : "Connexion réussie !";
+}
+
+async function signOut(){
+  await supabase.auth.signOut();
+}
+
+document.getElementById("logoutButton").onclick = signOut;
+
+function updateAccountUI(){
+  const loggedOut = document.getElementById("loggedOut");
+  const loggedIn = document.getElementById("loggedIn");
+
+  loggedOut.classList.toggle("hidden",!!currentUser);
+  loggedIn.classList.toggle("hidden",!currentUser);
+
+  document.getElementById("logoutButton")
+    .classList.toggle("hidden",!currentUser);
+
+  document.getElementById("accountButton")
+    .textContent = currentUser ? "Mon profil" : "Mon compte";
+
+  if(currentUser){
+    document.getElementById("userEmail").textContent =
+      currentUser.email;
+
+    const data = currentUser.user_metadata || {};
+
+    document.getElementById("country").value =
+      data.country || "France";
+
+    document.getElementById("favorites").value =
+      (data.favorites || []).join(", ");
+  }
+}
+
+async function savePreferences(){
+  if(!currentUser) return;
+
+  const country = document.getElementById("country").value;
+
+  const favorites = document.getElementById("favorites")
+    .value.split(",")
+    .map(x=>x.trim())
+    .filter(Boolean);
+
+  const {error} = await supabase.auth.updateUser({
+    data:{country,favorites}
+  });
+
+  document.getElementById("saveMessage").textContent =
+    error ? error.message : "Préférences enregistrées !";
+
+  const {data} = await supabase.auth.getUser();
+  currentUser = data.user;
+  updateAccountUI();
+}
+
+supabase.auth.onAuthStateChange((_event,session)=>{
+  currentUser = session?.user || null;
+  updateAccountUI();
+});
+
+const {data:initialSession} =
+  await supabase.auth.getSession();
+
+currentUser = initialSession.session?.user || null;
+updateAccountUI();
+
+// =====================================
+// 4. MATCHS DE FOOTBALL
+// =====================================
+
+async function loadMatches(){
+
+  const status = document.getElementById("matchStatus");
+  const container = document.getElementById("matches");
+
+  if(!FOOTBALL_API_PROXY){
+    status.textContent =
+      "La connexion sécurisée aux matchs doit encore être configurée.";
+    return;
+  }
+
+  status.textContent = "Chargement des matchs...";
+  container.replaceChildren();
+
+  try{
+    const today = new Date();
+    const from = today.toISOString().slice(0,10);
+
+    const future = new Date();
+    future.setDate(future.getDate()+7);
+    const to = future.toISOString().slice(0,10);
+
+    const response = await fetch(
+      FOOTBALL_API_PROXY +
+      "?from=" + from +
+      "&to=" + to +
+      "&timezone=Europe/Paris"
+    );
+
+    if(!response.ok){
+      throw new Error("Erreur de connexion aux matchs.");
+    }
+
+    const data = await response.json();
+
+    allMatches = data.response || [];
+
+    status.textContent = allMatches.length
+      ? allMatches.length + " matchs trouvés"
+      : "Aucun match trouvé pour cette période.";
+
+    renderMatches();
+
+  }catch(error){
+    status.textContent =
+      "Impossible de charger les matchs. Vérifie la connexion API.";
+    console.error(error);
+  }
+}
+
+function showMatches(filter){
+  currentFilter = filter;
+  renderMatches();
 }
 
 function renderMatches(){
- const container=document.getElementById("matches");
- container.innerHTML="";
+  const container = document.getElementById("matches");
+  container.replaceChildren();
 
- let filtered=allMatches.filter(match=>{
-  return currentTab==="all" || getCategory(match)===currentTab;
- });
+  let list = [...allMatches];
 
- // Priorité au pays du visiteur
- filtered.sort((a,b)=>{
-  const aPriority=visitorCountry &&
-   a.league.country===visitorCountry ? 1:0;
-  const bPriority=visitorCountry &&
-   b.league.country===visitorCountry ? 1:0;
-  if(aPriority!==bPriority)return bPriority-aPriority;
-  return new Date(a.fixture.date)-new Date(b.fixture.date);
- });
+  if(currentFilter === "live"){
+    list = list.filter(m=>
+      ["1H","2H","HT","ET","P","LIVE"].includes(m.fixture?.status?.short)
+    );
+  }
 
- if(!filtered.length){
-  container.innerHTML='<div class="empty">Aucun match dans cette catégorie pour le moment.</div>';
-  return;
- }
+  if(currentFilter === "finished"){
+    list = list.filter(m=>
+      ["FT","AET","PEN"].includes(m.fixture?.status?.short)
+    );
+  }
 
- filtered.forEach(match=>{
-  const home=match.teams.home;
-  const away=match.teams.away;
-  const status=match.fixture.status;
-  const category=getCategory(match);
+  if(currentFilter === "upcoming"){
+    list = list.filter(m=>
+      ["NS"].includes(m.fixture?.status?.short)
+    );
+  }
 
-  const date=new Date(match.fixture.date);
-  const time=date.toLocaleString("fr-FR",{
-   timeZone:TIMEZONE,
-   day:"2-digit",month:"2-digit",
-   hour:"2-digit",minute:"2-digit"
+  // Priorité au pays enregistré dans le compte.
+  if(currentUser?.user_metadata?.country){
+    const country = currentUser.user_metadata.country;
+    list.sort((a,b)=>{
+      const aMatch = a.league?.country === country ? 0 : 1;
+      const bMatch = b.league?.country === country ? 0 : 1;
+      return aMatch-bMatch;
+    });
+  }
+
+  if(!list.length){
+    container.textContent = "Aucun match dans cette catégorie.";
+    return;
+  }
+
+  list.forEach(m=>{
+    const card = document.createElement("div");
+    card.className = "match";
+
+    const league = document.createElement("p");
+    league.className = "muted";
+    league.textContent =
+      (m.league?.country || "") + " · " +
+      (m.league?.name || "Compétition");
+
+    const teams = document.createElement("div");
+    teams.className = "teams";
+
+    const home = document.createElement("span");
+    home.textContent = m.teams?.home?.name || "Équipe 1";
+
+    const score = document.createElement("span");
+    score.className = "score";
+    score.textContent =
+      m.goals?.home == null || m.goals?.away == null
+      ? "VS"
+      : m.goals.home + " - " + m.goals.away;
+
+    const away = document.createElement("span");
+    away.textContent = m.teams?.away?.name || "Équipe 2";
+
+    teams.append(home,score,away);
+
+    const time = document.createElement("p");
+    time.className = "muted";
+
+    const date = m.fixture?.date
+      ? new Date(m.fixture.date)
+      : null;
+
+    time.textContent =
+      (date ? date.toLocaleString("fr-FR") : "") +
+      " · " + (m.fixture?.status?.long || "");
+
+    card.append(league,teams,time);
+    container.append(card);
   });
-
-  const scores = category==="upcoming"
-   ? "VS"
-   : `${match.goals.home ?? 0} - ${match.goals.away ?? 0}`;
-
-  const statusText=category==="live"
-   ? `EN DIRECT · ${status.elapsed ?? ""}'`
-   : category==="finished"
-    ? "TERMINÉ"
-    : time;
-
-  const priority=visitorCountry &&
-   match.league.country===visitorCountry;
-
-  const card=document.createElement("div");
-  card.className="match";
-
-  card.innerHTML=`
-   <div class="league">
-    <span>${match.league.flag || "⚽"} ${match.league.country} · ${match.league.name}</span>
-    <span class="country-tag">${priority?"★ TON PAYS":""}</span>
-   </div>
-   <div class="teams">
-    <div class="team">
-     <img src="${home.logo}" alt="">
-     <div class="team-name"></div>
-    </div>
-    <div>
-     <div class="score">${scores}</div>
-     <div class="status">${statusText}</div>
-    </div>
-    <div class="team">
-     <img src="${away.logo}" alt="">
-     <div class="team-name"></div>
-    </div>
-   </div>`;
-
-  card.querySelectorAll(".team-name")[0].textContent=home.name;
-  card.querySelectorAll(".team-name")[1].textContent=away.name;
-
-  container.appendChild(card);
- });
 }
 
-document.querySelectorAll("[data-tab]").forEach(button=>{
- button.addEventListener("click",()=>{
-  document.querySelectorAll("[data-tab]").forEach(b=>b.classList.remove("active"));
-  button.classList.add("active");
-  currentTab=button.dataset.tab;
-  renderMatches();
- });
-});
+// =====================================
+// 5. DEMARRAGE
+// =====================================
 
-document.getElementById("refresh").addEventListener("click",loadMatches);
+window.showMatches = showMatches;
+window.loadMatches = loadMatches;
 
 loadMatches();
 
-// Actualisation automatique toutes les 30 minutes
-// pour préserver le quota gratuit.
-setInterval(loadMatches,30*60*1000);
 </script>
 </body>
 </html>
