@@ -451,4 +451,152 @@ loadMatches();
 
 </script>
 </body>
+
+<!-- GOALMOMENT ADMIN -->
+<style>
+#adminPanel {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  background:#080d18;
+  color:white;
+  padding:25px;
+  overflow:auto;
+  font-family:Arial,sans-serif;
+}
+#adminPanel input {
+  padding:13px;
+  margin:7px 0;
+  width:100%;
+  max-width:320px;
+  border-radius:8px;
+  border:1px solid #444;
+  background:#151e30;
+  color:white;
+}
+#adminPanel button {
+  padding:12px 18px;
+  border:0;
+  border-radius:8px;
+  background:#16c784;
+  color:#07130e;
+  font-weight:bold;
+  cursor:pointer;
+  margin:7px 0;
+}
+.admin-card {
+  background:#151e30;
+  border:1px solid #29364d;
+  border-radius:12px;
+  padding:18px;
+  margin:12px 0;
+}
+.admin-number {
+  font-size:30px;
+  font-weight:bold;
+  color:#16c784;
+}
+</style>
+
+<div id="adminPanel">
+  <h1>⚽ GOALMOMENT ADMIN</h1>
+
+  <div id="adminLogin">
+    <h2>Connexion administrateur</h2>
+    <input id="adminUser" placeholder="Identifiant">
+    <input id="adminPass" type="password"
+           placeholder="Mot de passe">
+    <br>
+    <button onclick="loginAdmin()">Se connecter</button>
+    <p id="adminError"></p>
+  </div>
+
+  <div id="adminDashboard" style="display:none">
+    <h2>Bienvenue, GOAT 🐐</h2>
+
+    <div class="admin-card">
+      <h3>Visites enregistrées sur cet appareil</h3>
+      <div class="admin-number" id="adminVisits">0</div>
+    </div>
+
+    <div class="admin-card">
+      <h3>Pages consultées</h3>
+      <div class="admin-number" id="adminPages">0</div>
+    </div>
+
+    <div class="admin-card">
+      <h3>Statistiques</h3>
+      <p>Dernière visite :</p>
+      <p id="adminLastVisit">Aucune</p>
+    </div>
+
+    <button onclick="resetAdminStats()">
+      Réinitialiser les statistiques
+    </button>
+    <br>
+    <button onclick="logoutAdmin()">Déconnexion</button>
+  </div>
+
+  <button onclick="closeAdmin()">Fermer</button>
+</div>
+
+<script>
+(function() {
+  const visits = Number(localStorage.getItem("gm_visits") || 0);
+  localStorage.setItem("gm_visits", visits + 1);
+  localStorage.setItem("gm_last_visit",
+    new Date().toLocaleString());
+
+  const pages = Number(localStorage.getItem("gm_pages") || 0);
+  localStorage.setItem("gm_pages", pages + 1);
+})();
+
+function openAdmin() {
+  document.getElementById("adminPanel").style.display = "block";
+}
+
+function closeAdmin() {
+  document.getElementById("adminPanel").style.display = "none";
+}
+
+function loginAdmin() {
+  const user = document.getElementById("adminUser").value;
+  const pass = document.getElementById("adminPass").value;
+
+  if (user === "goalgoat" && pass === "GoalMoment_Admin27!") {
+    document.getElementById("adminLogin").style.display = "none";
+    document.getElementById("adminDashboard").style.display = "block";
+
+    document.getElementById("adminVisits").textContent =
+      localStorage.getItem("gm_visits") || 0;
+
+    document.getElementById("adminPages").textContent =
+      localStorage.getItem("gm_pages") || 0;
+
+    document.getElementById("adminLastVisit").textContent =
+      localStorage.getItem("gm_last_visit") || "Aucune";
+  } else {
+    document.getElementById("adminError").textContent =
+      "Identifiant ou mot de passe incorrect.";
+  }
+}
+
+function logoutAdmin() {
+  document.getElementById("adminDashboard").style.display = "none";
+  document.getElementById("adminLogin").style.display = "block";
+  document.getElementById("adminPass").value = "";
+}
+
+function resetAdminStats() {
+  if (confirm("Réinitialiser les statistiques locales ?")) {
+    localStorage.removeItem("gm_visits");
+    localStorage.removeItem("gm_pages");
+    localStorage.removeItem("gm_last_visit");
+    location.reload();
+  }
+}
+</script>
+<!-- FIN GOALMOMENT ADMIN -->
+
 </html>
